@@ -26,28 +26,40 @@ const data = [
   }
 ];
 
-
 class Dashboard extends Component {
-
   state = {
-    loading: false
+    loading: false,
+    focused: null // Add focused key to the state
   };
 
+  // Add selectPanel function
+  selectPanel = (id) => {
+    this.setState((prevState) => ({
+      focused: prevState.focused === id ? null : id
+    }));
+  }
+
   render() {
-    const dashboardClasses = classnames("dashboard");
+    // Update dashboardClasses to include conditional CSS class
+    const dashboardClasses = classnames("dashboard", {
+      "dashboard--focused": this.state.focused
+    });
 
     if (this.state.loading) {
       return <Loading />;
     }
 
-    const panels = data.map(panel => (
-      <Panel 
-        key={panel.id}
-        id={panel.id}
-        label={panel.label}
-        value={panel.value}
-      />
-    ));
+    // Filter panels based on focused state
+    const panels = (this.state.focused ? data.filter(panel => this.state.focused === panel.id) : data)
+      .map(panel => (
+        <Panel
+          key={panel.id}
+          id={panel.id}
+          label={panel.label}
+          value={panel.value}
+          onSelect={this.selectPanel} // Pass selectPanel function to Panel component
+        />
+      ));
 
     return (
       <main className={dashboardClasses}>
@@ -58,3 +70,4 @@ class Dashboard extends Component {
 }
 
 export default Dashboard;
+
