@@ -32,12 +32,24 @@ class Dashboard extends Component {
     focused: null // Add focused key to the state
   };
 
-  // Change selectPanel back to an instance method
-  selectPanel(id) {
+  componentDidMount() {
+    const focused = JSON.parse(localStorage.getItem("focused"));
+    if (focused) {
+      this.setState({ focused });
+    }
+  }
+
+  componentDidUpdate(previousProps, previousState) {
+    if (previousState.focused !== this.state.focused) {
+      localStorage.setItem("focused", JSON.stringify(this.state.focused));
+    }
+  }
+
+  selectPanel = (id) => {
     this.setState(previousState => ({
       focused: previousState.focused !== null ? null : id
     }));
-  }
+  };
 
   render() {
     const dashboardClasses = classnames("dashboard", {
@@ -48,14 +60,13 @@ class Dashboard extends Component {
       return <Loading />;
     }
 
-    // Filter panels based on focused state
     const panels = (this.state.focused ? data.filter(panel => this.state.focused === panel.id) : data)
       .map(panel => (
         <Panel
           key={panel.id}
           label={panel.label}
           value={panel.value}
-          onSelect={() => this.selectPanel(panel.id)} // Use arrow function in render
+          onSelect={() => this.selectPanel(panel.id)}
         />
       ));
 
