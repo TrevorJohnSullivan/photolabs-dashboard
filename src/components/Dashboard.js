@@ -32,15 +32,14 @@ class Dashboard extends Component {
     focused: null // Add focused key to the state
   };
 
-  // Add selectPanel function
-  selectPanel = (id) => {
-    this.setState((prevState) => ({
-      focused: prevState.focused === id ? null : id
+  // Change selectPanel back to an instance method
+  selectPanel(id) {
+    this.setState(previousState => ({
+      focused: previousState.focused !== null ? null : id
     }));
   }
 
   render() {
-    // Update dashboardClasses to include conditional CSS class
     const dashboardClasses = classnames("dashboard", {
       "dashboard--focused": this.state.focused
     });
@@ -54,10 +53,9 @@ class Dashboard extends Component {
       .map(panel => (
         <Panel
           key={panel.id}
-          id={panel.id}
           label={panel.label}
           value={panel.value}
-          onSelect={this.selectPanel} // Pass selectPanel function to Panel component
+          onSelect={() => this.selectPanel(panel.id)} // Use arrow function in render
         />
       ));
 
@@ -70,4 +68,3 @@ class Dashboard extends Component {
 }
 
 export default Dashboard;
-

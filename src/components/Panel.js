@@ -2,13 +2,10 @@ import React, { Component } from "react";
 
 class Panel extends Component {
   render() {
-    const { id, label, value, onSelect } = this.props; // Destructure id and onSelect
+    const { label, value, onSelect } = this.props; // Destructure label, value, and onSelect
 
     return (
-      <section
-        className="dashboard__panel"
-        onClick={() => onSelect(id)} // Add onClick handler
-      >
+      <section className="dashboard__panel" onClick={onSelect}> {/* Use onSelect directly */}
         <h1 className="dashboard__panel-header">{label}</h1>
         <p className="dashboard__panel-value">{value}</p>
       </section>
